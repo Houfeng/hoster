@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="initial-scale=1.0, width=device-width, user-scalable=yes" />
+	<meta name="theme-color" content="#ffffff">
+	<meta charset="UTF-8">
+	<title>Mditor</title>
+	<script>
+		if (self.require) {
+			self.electron = require('electron');
+			self.remote = electron.remote;
+		}
+	</script>
+	<link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../../node_modules/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="./index.css">
+	<base/>
+
+	<template class="slide">
+		<div class="slide">
+			<div class="head"></div>
+			<ul class="list">
+				<li class="list-item {{editItem==item?'editing':''}} {{selectedItem==item?'active':''}}" m:each="item of list" m:on:dblclick="edit(item)"
+				 m:on:click="select(item)" title="{{item.name}}">
+					<i m:if="item.type!='system'" class="fa fa-minus-circle pull-right list-del" aria-hidden="true" m:on:click="remove(item,$event)"></i>
+					<input type="checkbox" class="list-check" m:model="item.checked" />
+					<span m:if="!(editItem==item)" class="list-label">{{item.name||'...'}}</span>
+					<input m:if="editItem==item" class="list-editing" m:on:blur="edit(null)" m:on:change="edit(null)" m:model="item.name" m:focus="editItem==item" />
+				</li>
+			</ul>
+			<div class="foot" m:on:click="add">
+				<i class="fa fa-plus-circle" aria-hidden="true"></i> 添加配置
+			</div>
+		</div>
+	</template>
+
+	<template class="editor">
+		<div class="editor">
+			<div class="head">
+				<span>{{item.name||'...'}}</span>
+				<span class="pull-right">共 {{count}} 条记录</span>
+			</div>
+			<textarea m:on:contextmenu="contextmenu" m:model="item.content"></textarea>
+		</div>
+	</template>
+
+</head>
+
+<body m:on:contextmenu="onContextMenu">
+	<div class="app">
+		<m:slide m:id="slide" m:model:list="list" m:model:selected-item="selectedItem"></m:slide>
+		<m:editor m:id="editor" m:model:item="selectedItem"></m:editor>
+	</div>
+	<script src="./index.js"></script>
+</body>
+
+</html>
