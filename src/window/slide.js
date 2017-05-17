@@ -16,7 +16,7 @@ module.exports = new mokit.Component({
 
   //编辑一项
   edit(item) {
-    if (item && item.type != 'local') return;
+    if (!item || item.type == 'remote') return;
     this.editItem = item;
   },
 

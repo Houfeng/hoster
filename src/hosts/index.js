@@ -18,24 +18,28 @@ exports.load = async function () {
     if (err) console.error(err);
     list = [];
   }
-  let defaultHosts = await fs.readFile(DEFAULT_HOSTS_FILE);
-  list.unshift({
-    name: 'SYSTEM',
-    type: 'system',
-    editing: false,
-    checked: true,
-    content: defaultHosts.toString()
-  });
   return list;
+};
+
+exports.getDefault = async function () {
+  if (!this.defaultHosts) {
+    let buffer = await fs.readFile(DEFAULT_HOSTS_FILE);
+    this.defaultHosts = {
+      name: 'SYSTEM',
+      content: buffer.toString()
+    };
+  }
+  return this.defaultHosts;
 };
 
 exports.save = async function (list) {
   await mkdirp(DATA_PATH);
-  let customList = list.filter(item => item.type != 'system');
+  let customList = list.filter(item => item.type != 'remote');
   await fs.writeFile(DATA_FILE, JSON.stringify(customList));
   let usedList = list.filter(item => item.checked);
-  let buffer = usedList.map(item => {
+  usedList.unshift(await this.getDefault());
+  let lines = usedList.map(item => {
     return `${os.EOL}#${item.name}${os.EOL}${item.content.trim()}${os.EOL}`;
   });
-  await fs.writeFile(SYSTEM_HOSTS_FILE, buffer.join(os.EOL));
+  await fs.writeFile(SYSTEM_HOSTS_FILE, lines.join(os.EOL));
 };

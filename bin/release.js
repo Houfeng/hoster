@@ -24,12 +24,12 @@ packager({
   'extend-info': `${__dirname}/info.plist`,
   ignore: [
     /node_modules/,
-    /design/,
     /docs/,
     /release/,
+    /\.dmgCanvas/,
     /test/,
     /bin/,
-    /(\.DS_Store|\.babelrc|\.eslintrc\.yml|electron-builder\.yml|server\.yml|ignore|\.conf\.js|\.rename|\.config\.js|\.map|jasmine\.json)$/
+    /(\.DS_Store|\.psd|\.babelrc|\.eslintrc\.yml|electron-builder\.yml|server\.yml|ignore|\.conf\.js|\.rename|\.config\.js|\.map|jasmine\.json)$/
   ]
 }, function (err, appPaths) {
   if (err) console.error(err);

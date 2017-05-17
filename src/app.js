@@ -3,6 +3,7 @@ const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const Menu = electron.Menu;
 const dialog = electron.dialog;
+const Tray = electron.Tray;
 const rendererVal = require('electron-renderer-value');
 const path = require('path');
 const url = require('url');
@@ -22,16 +23,17 @@ const hosts = require('./hosts');
 const isRoot = require('is-root');
 const sudo = require('sudo-prompt');
 
-if (!isRoot()) {
-  let options = {
-    name: pkg.displayName
-  };
-  sudo.exec(`${process.execPath}`, options, (error, stdout, stderr) => { });
-  setTimeout(() => {
-    app.quit();
-  }, 500);
-  return;
-}
+// if (!isRoot()) {
+//   let options = {
+//     name: pkg.displayName,
+//     icns: path.resolve(__dirname, '../design/icon.png')
+//   };
+//   sudo.exec(`${process.execPath}`, options, (error, stdout, stderr) => { });
+//   setTimeout(() => {
+//     app.quit();
+//   }, 500);
+//   return;
+// }
 
 // 保持所有对于 window 对象的全局引用，如果你不这样做，
 // 当 JavaScript 对象被垃圾回收， window 会被自动地关闭
@@ -87,9 +89,48 @@ app.createWindow = function createWindow() {
 };
 
 app.showWindow = async function () {
+  if (singleWindow) {
+    return singleWindow.focus();
+  }
   let data = await hosts.load();
+  await this.createTray(data);
   await this.createWindow();
   singleWindow.webContents.send('load', data);
+};
+
+let tray = null;
+app.createTray = function (list) {
+  list = list || [];
+  if (!tray) {
+    tray = new Tray(path.resolve(__dirname, '../design/tray.png'));
+    tray.setToolTip('This is my application.');
+  }
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: '显示窗口', type: 'normal', click() {
+        app.showWindow();
+      }
+    },
+    { type: 'separator' },
+    ...list.map(item => ({
+      label: item.name, type: 'checkbox', checked: item.checked,
+      click() {
+        item.checked = !item.checked;
+        if (singleWindow) {
+          singleWindow.webContents.send('load', list);
+        } else {
+          hosts.save(list);
+        }
+      }
+    })),
+    { type: 'separator' },
+    {
+      label: '退出应用', type: 'normal', click() {
+        app.quit();
+      }
+    }
+  ]);
+  tray.setContextMenu(contextMenu);
 };
 
 // 当全部窗口关闭时退出。
@@ -152,6 +193,7 @@ ipcMain.on('contextmenu', function (event) {
 //在收到保存数据时
 ipcMain.on('save', async function (event, data) {
   await hosts.save(data);
+  await app.createTray(data);
 });
 
 //检查更新
