@@ -17,7 +17,21 @@ const globalShortcut = electron.globalShortcut;
 const sleep = require('./common/sleep');
 const i18n = require('./i18n');
 const stp = require('stp');
+const pkg = require('../package');
 const hosts = require('./hosts');
+const isRoot = require('is-root');
+const sudo = require('sudo-prompt');
+
+if (!isRoot()) {
+  let options = {
+    name: pkg.displayName
+  };
+  sudo.exec(`${process.execPath}`, options, (error, stdout, stderr) => { });
+  setTimeout(() => {
+    app.quit();
+  }, 500);
+  return;
+}
 
 // 保持所有对于 window 对象的全局引用，如果你不这样做，
 // 当 JavaScript 对象被垃圾回收， window 会被自动地关闭
@@ -47,7 +61,7 @@ app.createWindow = function createWindow() {
     singleWindow = null;
   });
   //对话框偏移量，针对打开保存等弹出窗口
-  singleWindow.setSheetOffset(38);
+  singleWindow.setSheetOffset(0);
   //不可全屏
   singleWindow.setFullScreenable(false);
   // 加载应用的 index.html。

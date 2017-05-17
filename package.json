@@ -75,6 +75,7 @@
     "electron-renderer-value": "^1.1.0",
     "font-awesome": "^4.7.0",
     "html-pdf": "^2.1.0",
+    "is-root": "^1.0.0",
     "js-yaml": "^3.8.2",
     "md5": "^2.2.1",
     "mditor": "^1.2.9",
@@ -82,6 +83,7 @@
     "mokit": "^3.1.3",
     "node-fetch": "^1.6.3",
     "ntils": "^2.1.0",
-    "stp": "^0.0.2"
+    "stp": "^0.0.2",
+    "sudo-prompt": "^7.0.0"
   }
 }
