@@ -203,14 +203,14 @@ app.checkUpdate = async function (force) {
   if (!info && !force) {
     return;
   } else if (!info) {
-    return dialog.showMessageBox(window, {
+    return dialog.showMessageBox(null, {
       type: 'question',
       buttons: [locale.close],
       message: locale.checkUpdate,
       detail: locale.currentlyTheLatestVersion
     });
   }
-  let result = dialog.showMessageBox(window, {
+  let result = dialog.showMessageBox(null, {
     type: 'question',
     buttons: [locale.goDownload, locale.donNotUpdate],
     defaultId: 0,

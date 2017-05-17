@@ -1,7 +1,7 @@
 {
   "name": "hoster",
   "displayName": "Hoster",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Hoster，最好用的 hosts 管理工具",
   "main": "./src/app.js",
   "scripts": {
@@ -19,7 +19,7 @@
     "host": "localhost",
     "port": 8006
   },
-  "homepage": "http://houfeng.net",
+  "homepage": "http://houfeng.net/hoster/",
   "update": {
     "url": "http://houfeng.net/hoster/update.json"
   },
