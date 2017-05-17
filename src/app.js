@@ -23,17 +23,17 @@ const hosts = require('./hosts');
 const isRoot = require('is-root');
 const sudo = require('sudo-prompt');
 
-// if (!isRoot()) {
-//   let options = {
-//     name: pkg.displayName,
-//     icns: path.resolve(__dirname, '../design/icon.png')
-//   };
-//   sudo.exec(`${process.execPath}`, options, (error, stdout, stderr) => { });
-//   setTimeout(() => {
-//     app.quit();
-//   }, 500);
-//   return;
-// }
+if (!isRoot()) {
+  let options = {
+    name: pkg.displayName,
+    icns: path.resolve(__dirname, '../design/icon.png')
+  };
+  sudo.exec(`${process.execPath}`, options, (error, stdout, stderr) => { });
+  setTimeout(() => {
+    app.quit();
+  }, 500);
+  return;
+}
 
 // 保持所有对于 window 对象的全局引用，如果你不这样做，
 // 当 JavaScript 对象被垃圾回收， window 会被自动地关闭
