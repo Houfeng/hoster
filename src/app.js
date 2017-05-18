@@ -23,7 +23,7 @@ const hosts = require('./hosts');
 const isRoot = require('is-root');
 const sudo = require('sudo-prompt');
 
-if (!isRoot()) {
+if (process.env.ENV != 'dev' && !isRoot()) {
   let options = {
     name: pkg.displayName,
     icns: path.resolve(__dirname, '../design/icon.png')

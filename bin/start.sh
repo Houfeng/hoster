@@ -2,4 +2,5 @@
 
 set -e
 
+export ENV=dev
 electron .
