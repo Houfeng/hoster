@@ -16,7 +16,7 @@ packager({
   arch: 'x64',
   icon: `${CWD}/design/icon.icns`,
   overwrite: true,
-  electronVersion: '1.6.2',
+  electronVersion: '1.6.8',
   platform: "darwin",
   "osx-sign": {
     type: "distribution"
