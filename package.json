@@ -35,7 +35,7 @@
     "cify": "^2.1.11",
     "clean-webpack-plugin": "^0.1.14",
     "css-loader": "^0.26.1",
-    "electron": "^1.6.5",
+    "electron": "^1.6.8",
     "electron-builder": "^15.2.0",
     "electron-installer-dmg": "^0.2.0",
     "electron-packager": "^8.5.2",
