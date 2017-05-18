@@ -28,7 +28,15 @@ if (process.env.ENV != 'dev' && !isRoot()) {
     name: pkg.displayName,
     icns: path.resolve(__dirname, '../design/icon.png')
   };
-  sudo.exec(`${process.execPath}`, options, (error, stdout, stderr) => { });
+  sudo.exec(`${process.execPath}`, options, (error, stdout, stderr) => {
+    if (!error) return;
+    dialog.showMessageBox(null, {
+      type: 'error',
+      buttons: [locale.close],
+      message: 'Error',
+      detail: JSON.stringify(error)
+    });
+  });
   setTimeout(() => {
     app.quit();
   }, 500);
