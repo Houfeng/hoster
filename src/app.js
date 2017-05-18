@@ -20,15 +20,16 @@ const i18n = require('./i18n');
 const stp = require('stp');
 const pkg = require('../package');
 const hosts = require('./hosts');
-const isRoot = require('is-root');
 const sudo = require('sudo-prompt');
 
-if (process.env.ENV != 'dev' && !isRoot()) {
+const ENV_NAME = `${pkg.name}_env`;
+
+if (process.env[ENV_NAME] != 'root') {
   let options = {
     name: pkg.displayName,
     icns: path.resolve(__dirname, '../design/icon.png')
   };
-  sudo.exec(`${process.execPath}`, options, (error, stdout, stderr) => {
+  sudo.exec(`${ENV_NAME}=root ${process.execPath}`, options, (error, stdout, stderr) => {
     if (!error) return;
     dialog.showMessageBox(null, {
       type: 'error',

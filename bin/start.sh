@@ -2,5 +2,5 @@
 
 set -e
 
-export ENV=dev
+export hoster_env=root
 electron .
