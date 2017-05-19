@@ -10,9 +10,9 @@ const DEFAULT_HOSTS_FILE = path.normalize(`${__dirname}/default.txt`);
 
 exports.load = async function () {
   await mkdirp(DATA_PATH);
-  let buffer = await fs.readFile(DATA_FILE);
   let list;
   try {
+    let buffer = await fs.readFile(DATA_FILE);
     list = JSON.parse(buffer.toString()) || [];
   } catch (err) {
     if (err) console.error(err);
