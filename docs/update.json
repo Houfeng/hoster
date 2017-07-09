@@ -1,7 +1,8 @@
 {
   "version": "0.1.4",
   "detail": [
-    "1 修复部分电脑无法启动的问题"
+    "1. 新增远程配置功能",
+    "2. 新增语法高度功能"
   ],
   "url": "https://github.com/Houfeng/hoster"
 }
