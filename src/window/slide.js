@@ -2,6 +2,7 @@ const mokit = require('mokit');
 const template = require('../common/template');
 const utils = require('ntils');
 const dialog = remote.dialog;
+const ipcRenderer = require('electron').ipcRenderer;
 
 module.exports = new mokit.Component({
   template: template('.slide'),
@@ -11,6 +12,9 @@ module.exports = new mokit.Component({
     editItem: null,
     list: {
       value: []
+    },
+    filtrateList() {
+      return this.list.filter(item => !item.hidden);
     }
   },
 
@@ -53,6 +57,22 @@ module.exports = new mokit.Component({
     if (result == 1) return;
     let index = this.list.findIndex(i => i == item);
     this.list.splice(index, 1);
+  },
+
+  manifest() {
+    let manifestItem = this.list.find(item => item.type == 'manifest');
+    if (!manifestItem) {
+      manifestItem = {
+        id: utils.newGuid(),
+        type: 'manifest',
+        name: '远程清单',
+        content: '',
+        checked: false,
+        hidden: true
+      };
+      this.list.push(manifestItem);
+    }
+    this.selectedItem = manifestItem;
   }
 
 });

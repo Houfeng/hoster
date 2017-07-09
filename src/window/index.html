@@ -14,19 +14,23 @@
 	</script>
 	<link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
 	<link rel="stylesheet" href="../../node_modules/font-awesome/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../../node_modules/codemirror/lib/codemirror.css">
 	<link rel="stylesheet" href="./index.css">
 	<base/>
 
 	<template class="slide">
 		<div class="slide">
-			<div class="head"></div>
+			<div class="head">
+				<i m:on:click="manifest" class="fa fa-globe pull-right globe" aria-hidden="true"></i>
+			</div>
 			<ul class="list">
-				<li class="list-item {{editItem==item?'editing':''}} {{selectedItem==item?'active':''}}" m:each="item of list" m:on:dblclick="edit(item)"
+				<li class="list-item {{editItem==item?'editing':''}} {{selectedItem==item?'active':''}}" m:each="item of filtrateList" m:on:dblclick="edit(item)"
 				 m:on:click="select(item)" title="{{item.name}}">
-					<i m:if="item.type!='remote'" class="fa fa-minus-circle pull-right list-del" aria-hidden="true" m:on:click="remove(item,$event)"></i>
+					<i class="fa fa-minus-circle pull-right list-del" aria-hidden="true" m:on:click="remove(item,$event)"></i>
 					<input type="checkbox" class="list-check" m:model="item.checked" />
 					<span m:if="!(editItem==item)" class="list-label">{{item.name||'...'}}</span>
-					<input m:if="editItem==item" class="list-editing" m:on:blur="edit(null)" m:on:change="edit(null)" m:model="item.name" m:focus="editItem==item" />
+					<input m:if="editItem==item" class="list-editing" m:on:blur="edit(null)" m:on:change="edit(null)" m:model="item.name" m:focus="editItem==item"
+					/>
 				</li>
 			</ul>
 			<div class="foot" m:on:click="add">
@@ -39,9 +43,15 @@
 		<div class="editor">
 			<div class="head">
 				<span>{{item.name||'...'}}</span>
-				<span class="pull-right">共 {{count}} 条记录</span>
+				<span m:if="item.type!='manifest'" class="pull-right">共 {{count}} 条记录</span>
+				<span m:if="item.type=='manifest'" class="pull-right">
+					<a m:if="!downloading" class="download" m:on:click="download">
+						立即更新
+					</a>
+					<span m:if="downloading" class="download">正在更新...</span>
+				</span>
 			</div>
-			<textarea m:on:contextmenu="contextmenu" m:model="item.content"></textarea>
+			<m:textarea m:on:contextmenu="contextmenu" m:prop:value="item.content" m:on:change="textareaChanged"></m:textarea>
 		</div>
 	</template>
 

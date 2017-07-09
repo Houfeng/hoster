@@ -21,6 +21,7 @@ const stp = require('stp');
 const pkg = require('../package');
 const hosts = require('./hosts');
 const sudo = require('sudo-prompt');
+const os = require('os');
 
 const ENV_NAME = `${pkg.name}_env`;
 
@@ -56,8 +57,8 @@ app.createWindow = function createWindow() {
   // 创建浏览器窗口。
   singleWindow = new BrowserWindow({
     backgroundColor: '#ffffff',
-    width: 800,
-    height: 494,
+    width: 900,
+    height: 500,
     minWidth: 600,
     minHeight: 371,
     titleBarStyle: 'hidden-inset',
@@ -121,7 +122,7 @@ app.createTray = function (list) {
       }
     },
     { type: 'separator' },
-    ...list.map(item => ({
+    ...list.filter(item => item.type != 'manifest').map(item => ({
       label: item.name, type: 'checkbox', checked: item.checked,
       click() {
         item.checked = !item.checked;
@@ -204,6 +205,30 @@ ipcMain.on('save', async function (event, data) {
   await hosts.save(data);
   await app.createTray(data);
 });
+
+//在收到保存数据时
+ipcMain.on('download', async function (event, data) {
+  try {
+    await hosts.download();
+    await app.sendData();
+  } catch (err) {
+    let detail = process.env.NODE_ENV ?
+      `${err.message}${os.EOL}${err.stack}` :
+      err.message;
+    dialog.showMessageBox(null, {
+      type: 'warning',
+      buttons: [locale.close],
+      message: '警告',
+      detail: detail
+    });
+  }
+});
+
+app.sendData = async function () {
+  if (!singleWindow) return;
+  let data = await hosts.load();
+  singleWindow.webContents.send('load', data);
+};
 
 //检查更新
 app.checkUpdate = async function (force) {

@@ -29,6 +29,11 @@ const ctx = window.ctx = mokit({
 
 //在收到文件内容时
 ipcRenderer.on('load', function (event, data) {
-  ctx.list = data;
-  ctx.selectedItem = data[0] || {};
+  let list = data || [];
+  let remoteList = list.filter(item => item.type == 'remote');
+  let localList = list.filter(item => item.type == 'local');
+  let manifestList = list.filter(item => item.type == 'manifest');
+  ctx.list = remoteList.concat(localList, manifestList);
+  if (!ctx.selectedItem.type) ctx.selectedItem = list[0] || {};
+  ctx.editor.downloading = false;
 });

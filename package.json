@@ -72,6 +72,7 @@
   "dependencies": {
     "bluebird": "^3.5.0",
     "bootstrap": "^3.3.7",
+    "codemirror": "^5.27.4",
     "electron-renderer-value": "^1.1.0",
     "font-awesome": "^4.7.0",
     "js-yaml": "^3.8.2",
